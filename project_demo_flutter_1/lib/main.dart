@@ -53,6 +53,11 @@ class MyAppState extends ChangeNotifier {
     favorites.remove(wordPair); // untuk menghapus kata dari favorite yang di klik
     notifyListeners();
   }
+
+  void removeAllHistory() {
+    history.clear(); // untuk menghapus kata dari favorite yang di klik
+    notifyListeners();
+  }
 }  
 
 
@@ -241,28 +246,46 @@ class HistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     MyAppState appState = context.watch<MyAppState>();
-    return Container(
-      child: ListView(
-        children: [
-          Text('You have ${appState.history.length} History of Random Words: ',
-          style: Theme.of(context).textTheme.titleLarge),
+    return Scaffold(
+      body: Container(      
+        child: ListView(
+          children: [
+            Text('You have ${appState.history.length} History of Random Words: ',
+            style: Theme.of(context).textTheme.titleLarge),
+        
+            ...appState.history.map(
+              (wp)=> ListTile(
+                title: Text(wp.asCamelCase),
+                onTap: (){
+                  ScaffoldMessenger.of(context)
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(
+                    SnackBar(
+                      content: Text('It`s ${wp.asCamelCase}'),
+                    ),
+                  );                
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: 
+      ElevatedButton.icon(
+            label: Text("Delete History"),
+            icon: Icon(Icons.delete),
+            onPressed: () {
+                appState.removeAllHistory();
 
-          ...appState.history.map(
-            (wp)=> ListTile(
-              title: Text(wp.asCamelCase),
-              onTap: (){
                 ScaffoldMessenger.of(context)
                 ..hideCurrentSnackBar()
                 ..showSnackBar(
                   SnackBar(
-                    content: Text('It`s ${wp.asCamelCase}'),
+                    content: Text('History Deleted'),
                   ),
-                );                
+                );
               },
-            ),
           ),
-        ],
-      ),
     );
   }
 }
