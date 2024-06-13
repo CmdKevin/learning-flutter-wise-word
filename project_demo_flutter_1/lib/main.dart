@@ -48,8 +48,9 @@ class MyAppState extends ChangeNotifier {
    
   notifyListeners();
   }
-void removeFromHistory(WordPair wordPair) {
-    history.remove(wordPair); // untuk menghapus kata dari history
+
+  void removeFromFavorites(WordPair wordPair) {
+    favorites.remove(wordPair); // untuk menghapus kata dari favorite yang di klik
     notifyListeners();
   }
 }  
@@ -223,7 +224,8 @@ class FavoritePage extends StatelessWidget {
                   SnackBar(
                     content: Text('My Favorite Word is ${wp.asCamelCase}'),
                   ),
-                );                
+                );           
+                appState.removeFromFavorites(wp); // remove favorites yang di klik    
               },
             ),
           ),
@@ -255,8 +257,7 @@ class HistoryPage extends StatelessWidget {
                   SnackBar(
                     content: Text('It`s ${wp.asCamelCase}'),
                   ),
-                );
-                appState.removeFromHistory(wp); // fungsi untuk menghilangkan history yang ditekan
+                );                
               },
             ),
           ),
